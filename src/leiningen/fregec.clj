@@ -21,18 +21,32 @@
         :when (>= (.lastModified source) (.lastModified compiled))]
     (.getPath source)))
 
+(def ^:private frege-flags
+  "Very version dependent! We should extract these from
+  frege.compiler.enums.Flags$TFlag I think!"
+  {:warnings 2
+   :withcp   3
+   :runjavac 4})
+
+(defn- flags-to-bits
+  "Given a sequence of Frege compiler flags, make a long (bit) value."
+  [flags]
+  (reduce + (map (fn [flag] (apply * (repeat (get frege-flags flag 0) 2)))
+                 flags)))
+
 (defn- create-opts
   "Create options for the Frege compiler."
   [project]
   (let [source-path (:frege-source-path project)
         compile-path (:compile-path project)
-        options 0 ; will fix this shortly - 0 = just compile to Java
+        flags [:warnings :withcp :runjavac]
+        options (flags-to-bits flags)
         prefix "" ; Frege package prefix - should always be empty string
         classpath (cp/get-classpath-string project)]
     (frege.compiler.Main/createopts (into-array String [source-path])
                                     options
                                     compile-path
-                                    (into-array String []) ; classpath
+                                    (into-array String (.split classpath ":"))
                                     prefix)))
 
 (defn- print-opts
@@ -63,5 +77,5 @@ Set :fregec-options in project.clj to pass options to the Frege compiler."
         options (create-opts project)
         compiler (compiler project options)
         function (frege.prelude.PreludeBase$TST/performUnsafe compiler)]
-    (print-opts options)
+    ;; (print-opts options) ;; debugging
     (.call function)))
