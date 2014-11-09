@@ -5,7 +5,9 @@
 
 (ns leiningen.fregec
   (:require [clojure.java.io :as io]
-            [leiningen.classpath :as cp])
+            [leiningen.core.classpath :as cp]
+            [leiningen.core.eval :as eval]
+            [leiningen.core.project :as project])
   (:import java.io.File))
 
 (defn- stale-frege-sources
@@ -34,21 +36,6 @@
   (reduce + (map (fn [flag] (apply * (repeat (get frege-flags flag 0) 2)))
                  flags)))
 
-(defn- create-opts
-  "Create options for the Frege compiler."
-  [project]
-  (let [source-path (:frege-source-path project)
-        compile-path (:compile-path project)
-        flags [:warnings :withcp :runjavac]
-        options (flags-to-bits flags)
-        prefix "" ; Frege package prefix - should always be empty string
-        classpath (cp/get-classpath-string project)]
-    (frege.compiler.Main/createopts (into-array String [source-path])
-                                    options
-                                    compile-path
-                                    (into-array String (.split classpath ":"))
-                                    prefix)))
-
 (defn- print-opts
   "Run the Frege code to print the compiler options."
   [opts]
@@ -57,25 +44,45 @@
        frege.prelude.PreludeBase$TST/performUnsafe
        .call))
 
-(defn- compiler
-  "Create compiler object for project and options."
-  [project opts]
-  (let [files (stale-frege-sources [(:frege-source-path project)]
-                                   (:compile-path project))]
-    (frege.compiler.Main/runfregec (into-array String files)
-                                   opts
-                                   (java.io.PrintWriter. *out*))))
+(defn- subprocess-form
+  "Build a form that can run the Frege compiler in a sub-process."
+  [project srcs out cp flags files]
+  `(binding [*out* *err*]
+     (let [opts#     (frege.compiler.Main/createopts
+                      (into-array String ~srcs)
+                      ~flags ~out
+                      (into-array String ~cp) "")
+           compiler# (frege.compiler.Main/runfregec
+                      (into-array String ~files)
+                      opts# (java.io.PrintWriter. *err*))
+           function# (frege.prelude.PreludeBase$TST/performUnsafe compiler#)]
+       (when-not (.call function#)
+         (println "Frege compilation failed!")))))
+
+(def ^:private subprocess-profile
+  {:dependencies [^:displace ['org.clojure/clojure (clojure-version)]]
+   :eval-in :subprocess})
 
 (defn fregec
   "Compile Frege source files in :frege-source-path to :compile-path
 
 Set :fregec-options in project.clj to pass options to the Frege compiler."
   [project]
-  (let [project (merge {:frege-source-path "."
-                        :compile-path "build"}
-                       project)
-        options (create-opts project)
-        compiler (compiler project options)
-        function (frege.prelude.PreludeBase$TST/performUnsafe compiler)]
-    ;; (print-opts options) ;; debugging
-    (.call function)))
+  (binding [*out* *err*]
+    (let [project (merge {:frege-source-paths [(or (:frege-source-path project)
+                                                   ".")]
+                          :compile-path "build"}
+                         project)
+          srcs  (:frege-source-paths project)
+          out   (:compile-path project)
+          files (stale-frege-sources srcs out)
+          flags (flags-to-bits [:warnings :withcp :runjavac])
+          cp    (cp/get-classpath project)
+          form  (subprocess-form project
+                                 (into [] srcs) out
+                                 (into [] cp) flags
+                                 (into [] files))]
+      ;; (print-opts options) ;; debugging
+      (binding [eval/*pump-in* false]
+        (eval/eval-in (project/merge-profiles project [subprocess-profile])
+                      form)))))
