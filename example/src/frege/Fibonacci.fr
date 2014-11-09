@@ -1,0 +1,14 @@
+module Fibonacci where
+
+-- lazy infinite sequence of Fibonacci numbers starting with a, b:
+fibs a b = a : fibs b (a + b)
+
+-- lazy infinite sequence of Fibonacci numbers (0, 1, 1, 2, 3, ...):
+fibonacci = fibs 0 1
+
+-- let Frege infer the types here (it'll be Int -> Int):
+fibn n = head $ drop n $ fibonacci
+
+-- Clojure use Long by default so this is our public API:
+fib :: Long -> Long
+fib n = Int.long $ fibn (Long.int n)
