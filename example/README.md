@@ -12,6 +12,10 @@ Run the Frege compiler and then run the Clojure application:
 
     lein do fregec, run
 
+Run the Clojure tests (which exercise the Frege functions):
+
+    lein do fregec, test
+
 ## License
 
 Copyright (c) 2014 Sean Corfield
