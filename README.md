@@ -6,7 +6,7 @@ A Leiningen plugin to compile Frege code.
 Usage
 -----
 
-Add `[lein-fregec "0.1.0-SNAPSHOT"]` to `:plugins` in `project.clj`. For now you'll need to check out this repo and run `lein install` yourself.
+Add `[lein-fregec "0.1.0-SNAPSHOT"]` to `:plugins` in `project.clj`.
 
 Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory right now.
 
