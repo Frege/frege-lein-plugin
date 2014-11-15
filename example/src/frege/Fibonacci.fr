@@ -9,6 +9,6 @@ fibonacci = fibs 0 1
 -- let Frege infer the types here (it'll be Int -> Int):
 fibn n = head $ drop n $ fibonacci
 
--- Clojure use Long by default so this is our public API:
+-- Clojure uses Long by default so this is our public API:
 fib :: Long -> Long
 fib n = Int.long $ fibn (Long.int n)
