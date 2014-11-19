@@ -60,7 +60,8 @@
          (println "Frege compilation failed!")))))
 
 (def ^:private subprocess-profile
-  {:dependencies [^:displace ['org.clojure/clojure (clojure-version)]]
+  {:dependencies [^:displace ['org.clojure/clojure (clojure-version)]
+                  ['com.theoryinpractise.frege/frege "3.21.586-g026e8d7"]]
    :eval-in :subprocess})
 
 (defn fregec
