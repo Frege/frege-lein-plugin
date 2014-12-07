@@ -52,6 +52,13 @@
                       (into-array String ~srcs)
                       ~flags ~out
                       (into-array String ~cp) "")
+           pr-opts#  (when ~(:debug project)
+                       (println "")
+                       (->> opts#
+                            frege.compiler.Main/printopts
+                            frege.prelude.PreludeBase$TST/performUnsafe
+                            .call)
+                       (println ""))
            compiler# (frege.compiler.Main/runfregec
                       (into-array String ~files)
                       opts# (java.io.PrintWriter. *err*))
@@ -84,7 +91,6 @@ Set :fregec-options in project.clj to pass options to the Frege compiler."
                                  (into [] srcs) out
                                  (into [] cp) flags
                                  (into [] files))]
-      ;; (print-opts options) ;; debugging
       (binding [eval/*pump-in* false]
         (eval/eval-in (project/merge-profiles project [subprocess-profile])
                       form)))))
