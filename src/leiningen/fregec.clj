@@ -57,7 +57,8 @@
                       opts# (java.io.PrintWriter. *err*))
            function# (frege.prelude.PreludeBase$TST/performUnsafe compiler#)]
        (when-not (.call function#)
-         (println "Frege compilation failed!")))))
+         (println "Frege compilation failed!")
+         (System/exit 1)))))
 
 (def ^:private subprocess-profile
   {:dependencies [^:displace ['org.clojure/clojure (clojure-version)]
