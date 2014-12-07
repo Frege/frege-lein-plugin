@@ -73,7 +73,10 @@
    :eval-in :subprocess})
 
 (defn fregec
-  "Compile Frege source files in :frege-source-path to :compile-path
+  "Compile Frege source files in :frege-source-paths to :compile-path
+
+Set :frege-compile-first in project.clj to specify a sequence of files
+that need to be compiled, in order, before the rest of the Frege source.
 
 Set :fregec-options in project.clj to pass options to the Frege compiler."
   [project]
@@ -84,7 +87,7 @@ Set :fregec-options in project.clj to pass options to the Frege compiler."
                          project)
           srcs  (:frege-source-paths project)
           out   (:compile-path project)
-          files (stale-frege-sources srcs out)
+          files (stale-frege-sources srcs out (or (:frege-compile-first project) []))
           flags (flags-to-bits [:warnings :withcp :runjavac])
           cp    (cp/get-classpath project)
           form  (subprocess-form project
