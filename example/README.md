@@ -1,4 +1,4 @@
-# lein-fregec example
+# lein-fregec Clojure / Frege example
 
 Example of Clojure / Frege mixed language project. Clojure main program calls Frege function.
 
