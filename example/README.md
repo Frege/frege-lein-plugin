@@ -1,4 +1,4 @@
-# example
+# lein-fregec example
 
 Example of Clojure / Frege mixed language project. Clojure main program calls Frege function.
 
@@ -18,7 +18,7 @@ Run the Clojure tests (which exercise the Frege functions):
 
 ## License
 
-Copyright (c) 2014 Sean Corfield
+Copyright (c) 2014-2015 Sean Corfield
 
 Distributed under the Eclipse Public License, the same as Clojure.
 

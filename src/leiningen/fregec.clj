@@ -1,14 +1,15 @@
-;; copyright (c) 2014 Sean Corfield
-;; work-in-progress
-;; currently hard-codes source path and compile path and filename for
-;; testing
+;; copyright (c) 2014-2015 Sean Corfield
 
 (ns leiningen.fregec
-  (:require [clojure.java.io :as io]
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io]
             [leiningen.core.classpath :as cp]
             [leiningen.core.eval :as eval]
             [leiningen.core.project :as project])
-  (:import java.io.File))
+  (:import java.io.File
+           (java.nio.file Files Paths)))
+
+(def ^:private fregec-version "3.22.324-g630677b")
 
 (defn- stale-frege-sources
   "Returns a lazy seq of file paths: every Frege source file within dirs modified
@@ -23,77 +24,60 @@
         :when (>= (.lastModified source) (.lastModified compiled))]
     (.getPath source)))
 
-(def ^:private frege-flags
-  "Very version dependent! We should extract these from
-  frege.compiler.enums.Flags$TFlag I think!"
-  {:warnings 2
-   :withcp   3
-   :runjavac 4})
-
-(defn- flags-to-bits
-  "Given a sequence of Frege compiler flags, make a long (bit) value."
-  [flags]
-  (reduce + (map (fn [flag] (apply * (repeat (get frege-flags flag 0) 2)))
-                 flags)))
-
-(defn- print-opts
-  "Run the Frege code to print the compiler options."
-  [opts]
-  (->> opts
-       frege.compiler.Main/printopts
-       frege.prelude.PreludeBase$TST/performUnsafe
-       .call))
-
 (defn- subprocess-form
   "Build a form that can run the Frege compiler in a sub-process."
-  [project srcs out cp flags files]
+  [fregec-args]
   `(binding [*out* *err*]
-     (let [opts#     (frege.compiler.Main/createopts
-                      (into-array String ~srcs)
-                      ~flags ~out
-                      (into-array String ~cp) "")
-           pr-opts#  (when ~(:debug project)
-                       (println "")
-                       (->> opts#
-                            frege.compiler.Main/printopts
-                            frege.prelude.PreludeBase$TST/performUnsafe
-                            .call)
-                       (println ""))
-           compiler# (frege.compiler.Main/runfregec
-                      (into-array String ~files)
-                      opts# (java.io.PrintWriter. *err*))
-           function# (frege.prelude.PreludeBase$TST/performUnsafe compiler#)]
-       (when-not (.call function#)
-         (println "Frege compilation failed!")
-         (System/exit 1)))))
+     (when-not (frege.compiler.Main/runCompiler (into-array String ~fregec-args))
+       (println "Frege compilation failed!")
+       (System/exit 1))))
 
 (def ^:private subprocess-profile
   {:dependencies [^:displace ['org.clojure/clojure (clojure-version)]
-                  ['com.theoryinpractise.frege/frege "3.21.586-g026e8d7"]]
+                  ['com.theoryinpractise.frege/frege fregec-version]]
    :eval-in :subprocess})
+
+(defn- file-exists
+  "Given a path, return true if it exists as a file."
+  [path]
+  (.exists (io/file path)))
+
+(defn- additional-fregec-args
+  "Given command line arguments, convert to Frege compiler arguments."
+  [args]
+  (map (fn [arg] (if (.startsWith arg ":")
+                   (str "-" (subs arg 1))
+                   arg)) args))
 
 (defn fregec
   "Compile Frege source files in :frege-source-paths to :compile-path
 
-Set :frege-compile-first in project.clj to specify a sequence of files
-that need to be compiled, in order, before the rest of the Frege source.
+Set :fregec-options in project.clj to pass options to the Frege compiler.
+Additional options may be passed on the command line.
 
-Set :fregec-options in project.clj to pass options to the Frege compiler."
-  [project]
+To display the Frege compiler's help, use: lein fregec :help"
+  [project & args]
   (binding [*out* *err*]
-    (let [project (merge {:frege-source-paths [(or (:frege-source-path project)
-                                                   ".")]
-                          :compile-path "build"}
-                         project)
+    (let [project (merge {:frege-source-paths ["."]} project)
           srcs  (:frege-source-paths project)
           out   (:compile-path project)
-          files (stale-frege-sources srcs out (or (:frege-compile-first project) []))
-          flags (flags-to-bits [:warnings :withcp :runjavac])
-          cp    (cp/get-classpath project)
-          form  (subprocess-form project
-                                 (into [] srcs) out
-                                 (into [] cp) flags
-                                 (into [] files))]
+          flags (:fregec-options project)
+          files (stale-frege-sources srcs out)
+          cp    (->> (cp/get-classpath project)
+                     ;; only pass directories / files that exist:
+                     (filter file-exists))
+          path-sep (System/getProperty "path.separator")
+          fregec-args (-> ["-d" out ; output directory
+                           "-fp" (str/join path-sep cp) ; imported Frege package paths
+                           "-sp" (str/join path-sep srcs) ; source paths
+                           "-make"] ; let compiler do dependency stuff
+                          (into (additional-fregec-args args))
+                          (into (concat flags files)))]
+      (leiningen.core.main/debug "Frege compiler version:" fregec-version)
+      (apply leiningen.core.main/debug "Frege compiler arguments:" fregec-args)
+      ;; ensure output directory exists:
+      (Files/createDirectories (Paths/get out (into-array String []))
+                               (into-array java.nio.file.attribute.FileAttribute []))
       (binding [eval/*pump-in* false]
         (eval/eval-in (project/merge-profiles project [subprocess-profile])
-                      form)))))
+                      (subprocess-form fregec-args))))))
