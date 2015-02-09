@@ -1,7 +1,7 @@
 lein-fregec
 ===========
 
-A Leiningen plugin to compile Frege code.
+A Leiningen plugin to compile Frege (http://www.frege-lang.org) code.
 
 Usage
 -----
