@@ -16,6 +16,14 @@ Run the Clojure tests (which exercise the Frege functions):
 
     lein do fregec, test
 
+You can also package up all the Clojure and Frege code and their runtimes:
+
+    lein uberjar
+
+That produces a JAR file which you can run:
+
+    java -jar target/example-0.1.0-SNAPSHOT-standalone.jar
+
 ## License
 
 Copyright (c) 2014-2015 Sean Corfield
