@@ -45,9 +45,9 @@
 (defn- additional-fregec-args
   "Given command line arguments, convert to Frege compiler arguments."
   [args]
-  (map (fn [arg] (if (.startsWith arg ":")
-                   (str "-" (subs arg 1))
-                   arg)) args))
+  (map (fn [^String arg] (if (.startsWith arg ":")
+                           (str "-" (subs arg 1))
+                           arg)) args))
 
 (defn fregec
   "Compile Frege source files in :frege-source-paths to :compile-path
