@@ -18,7 +18,15 @@ Create a JAR file containing the application and the Frege runtime:
 
 Run the application:
 
-    java -cp target/hello-0.1.0-SNAPSHOT-standalone.jar Hello
+    java -cp target/frege-hello-0.1.0-SNAPSHOT-standalone.jar Hello
+
+Note that you can also run the application without creating a JAR file after `lein fregec` if you specify the classpath that includes the Frege runtime:
+
+    java -cp ~/.m2/repository/com/theoryinpractise/frege/frege/3.22.324-g630677b/frege-3.22.324-g630677b.jar:target/classes Hello
+
+A simpler, but slower way to achieve that is to rely on Leiningen to retrieve the necessary classpath:
+
+    java -cp `lein classpath` Hello
 
 ## License
 

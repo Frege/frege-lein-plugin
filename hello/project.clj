@@ -1,4 +1,4 @@
-(defproject hello "0.1.0-SNAPSHOT"
+(defproject frege-hello "0.1.0-SNAPSHOT"
   :description "Example standalone Frege application"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
