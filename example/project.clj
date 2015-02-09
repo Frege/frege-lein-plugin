@@ -9,4 +9,5 @@
   :plugins [[lein-fregec "3.22.324"]]
   :frege-source-paths ["src/frege"]
   :main example.core
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all
+                       :prep-tasks ["fregec" "compile"]}})

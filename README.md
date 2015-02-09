@@ -24,7 +24,14 @@ This will pass `-v` to the Frege compiler (verbose mode). If you want to see the
 
 This will also display the exact version of the Frege compiler that the plugin is using.
 
-Run `lein do fregec, uberjar` to compile Frege source files and create a JAR file in the `target/` folder. In order to include the Frege runtime in the resulting JAR file, you will need the following dependency in your `project.clj` file:
+Run `lein uberjar` to compile Frege source files and create a JAR file in the `target/` folder. You need to ensure that Frege compilation is part of the `:uberjar` profile in `project.clj`:
+
+    :profiles {:uberjar {:aot :all
+                         :prep-tasks ["fregec" "compile"]}}
+
+This tells Leiningen to run the `fregec` task and the `compile` task before building the JAR file. That will run the Frege compiler and also compile any Clojure code in the project.
+
+Also, in order to include the Frege runtime in the resulting JAR file, you will need the following dependency in your `project.clj` file:
 
     :dependencies [[com.theoryinpractise.frege/frege "3.22.324-g630677b"]]
 
