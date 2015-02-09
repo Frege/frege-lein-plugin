@@ -6,9 +6,9 @@ A Leiningen plugin to compile Frege (http://www.frege-lang.org) code.
 Usage
 -----
 
-Add `[lein-fregec "3.22.324"]` to `:plugins` in `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
+Add `[lein-fregec "3.22.324"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
 
-Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way.
+Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way (although the `hello` example relies on current directory).
 
 Run `lein fregec` to compile Frege source files to `.class` files.
 
@@ -48,7 +48,9 @@ This assumes your `project.clj` starts out like this:
 
 There will also be a non-standalone JAR will which does not contain the Frege runtime.
 
-An example of mixed Clojure / Frege usage can be found in the [example directory](https://github.com/seancorfield/lein-fregec/tree/master/example) which is a self-contained Leiningen project!
+An example of a pure Frege project can be found in the [hello directory](https://github.com/seancorfield/lein-fregec/tree/master/hello) which is a self-contained Leiningen project with its own README.
+
+An example of mixed Clojure / Frege usage can be found in the [example directory](https://github.com/seancorfield/lein-fregec/tree/master/example) which is also a self-contained project.
 
 License
 -------
