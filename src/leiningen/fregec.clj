@@ -101,7 +101,7 @@ To display the Frege compiler's help, use: lein fregec :help"
                                (into-array java.nio.file.attribute.FileAttribute []))
       (binding [eval/*pump-in* false]
         (eval/eval-in (project/merge-profiles project [subprocess-profile])
-                      (subprocess-compiler-form fregec-args))
-        (when class-name
-          (eval/eval-in (project/merge-profiles project [subprocess-profile])
-                        (run-main-form class-name (vec run-args))))))))
+                      (subprocess-compiler-form fregec-args)))
+      (when class-name
+        (eval/eval-in (project/merge-profiles project [subprocess-profile])
+                      (run-main-form class-name (vec run-args)))))))

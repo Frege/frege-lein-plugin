@@ -1,4 +1,4 @@
-(defproject lein-fregec "3.22.367"
+(defproject lein-fregec "3.22.367-i"
   :description "Leiningen plugin to compile Frege source code"
   :url "https://github.com/seancorfield/lein-fregec"
   :license {:name "Eclipse Public License"
