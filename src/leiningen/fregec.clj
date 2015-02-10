@@ -9,7 +9,7 @@
   (:import java.io.File
            (java.nio.file Files Paths)))
 
-(def ^:private fregec-version "3.22.324-g630677b")
+(def ^:private fregec-version "3.22.367-g2737683")
 
 (defn- stale-frege-sources
   "Returns a lazy seq of file paths: every Frege source file within dirs modified
