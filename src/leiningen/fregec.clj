@@ -24,7 +24,7 @@
         :when (>= (.lastModified source) (.lastModified compiled))]
     (.getPath source)))
 
-(defn- subprocess-form
+(defn- subprocess-compiler-form
   "Build a form that can run the Frege compiler in a sub-process."
   [fregec-args]
   `(binding [*out* *err*]
@@ -49,6 +49,26 @@
                            (str "-" (subs arg 1))
                            arg)) args))
 
+(defn- run-class-args
+  "Given command line arguments, extract :run ClassName.
+  Returns a pair of ClassName (or nil) and the args without :run."
+  [args]
+  (let [[before run-etc] (split-with (partial not= ":run") args)]
+    (if (seq run-etc)
+      [(second run-etc) before (rest (rest run-etc))]
+      [nil args nil])))
+
+(defn- run-main-form
+  "Build a form that can run the main method of the given class."
+  [class-name args]
+  `(let [c# (Class/forName ~class-name)
+         j-args# (into-array String ~args)
+         m-arg-types# (into-array Class [(class j-args#)])
+         main# (.getDeclaredMethod c# "main" m-arg-types#)]
+     (if main#
+       (.invoke main# nil (into-array Object [j-args#]))
+       (println "Unable to find" (str ~class-name "/main") "method"))))
+
 (defn fregec
   "Compile Frege source files in :frege-source-paths to :compile-path
 
@@ -58,7 +78,8 @@ Additional options may be passed on the command line.
 To display the Frege compiler's help, use: lein fregec :help"
   [project & args]
   (binding [*out* *err*]
-    (let [project (merge {:frege-source-paths ["."]} project)
+    (let [[class-name args run-args] (run-class-args args)
+          project (merge {:frege-source-paths ["."]} project)
           srcs  (:frege-source-paths project)
           out   (:compile-path project)
           flags (:fregec-options project)
@@ -80,4 +101,7 @@ To display the Frege compiler's help, use: lein fregec :help"
                                (into-array java.nio.file.attribute.FileAttribute []))
       (binding [eval/*pump-in* false]
         (eval/eval-in (project/merge-profiles project [subprocess-profile])
-                      (subprocess-form fregec-args))))))
+                      (subprocess-compiler-form fregec-args))
+        (when class-name
+          (eval/eval-in (project/merge-profiles project [subprocess-profile])
+                        (run-main-form class-name (vec run-args))))))))

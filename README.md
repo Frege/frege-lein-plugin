@@ -46,6 +46,10 @@ This assumes your `project.clj` starts out like this:
     (defproject frege-hello "0.1.0-SNAPSHOT"
       ...)
 
+You can also run your (pure Frege) code by specifying `:run` and the class name (followed by any arguments for your `main` method):
+
+    lein fregec :run Hello
+
 There will also be a non-standalone JAR will which does not contain the Frege runtime.
 
 An example of a pure Frege project can be found in the [hello directory](https://github.com/seancorfield/lein-fregec/tree/master/hello) which is a self-contained Leiningen project with its own README.
