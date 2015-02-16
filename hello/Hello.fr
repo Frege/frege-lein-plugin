@@ -1,0 +1,4 @@
+module Hello where
+
+main _ = do
+    println "Hello World!"

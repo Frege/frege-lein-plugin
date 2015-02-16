@@ -1,0 +1,12 @@
+module Fibonacci where
+
+-- lazy infinite sequence of Fibonacci numbers starting with a, b:
+fibs a b = a : fibs b (a + b)
+
+-- lazy infinite sequence of Fibonacci numbers (0, 1, 1, 2, 3, ...):
+-- using 0L and 1L instead of 0 and 1 ensure type is inferred as [Long]
+fibonacci = fibs 0L 1L
+
+-- exposed API infers type as Long -> Long:
+-- drop takes an Int so we need to cast from Long
+fib n = head $ drop (Long.int n) $ fibonacci
