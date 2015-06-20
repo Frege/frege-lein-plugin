@@ -52,9 +52,9 @@ You can also run your (pure Frege) code by specifying `:run` and the class name 
 
 There will also be a non-standalone JAR will which does not contain the Frege runtime.
 
-An example of a pure Frege project can be found in the [hello directory](https://github.com/seancorfield/lein-fregec/tree/master/hello) which is a self-contained Leiningen project with its own README.
+An example of a pure Frege project can be found in the [hello directory](https://github.com/Frege/frege-lein-plugin/tree/master/hello) which is a self-contained Leiningen project with its own README.
 
-An example of mixed Clojure / Frege usage can be found in the [example directory](https://github.com/seancorfield/lein-fregec/tree/master/example) which is also a self-contained project.
+An example of mixed Clojure / Frege usage can be found in the [example directory](https://github.com/Frege/frege-lein-plugin/tree/master/example) which is also a self-contained project.
 
 License
 -------

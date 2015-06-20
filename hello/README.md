@@ -4,7 +4,7 @@ Example of standalone Frege project.
 
 ## Installation
 
-Download from https://github.com/seancorfield/lein-fregec.
+Download from https://github.com/Frege/frege-lein-plugin.
 
 ## Usage
 

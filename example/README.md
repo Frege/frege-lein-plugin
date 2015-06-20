@@ -4,7 +4,7 @@ Example of Clojure / Frege mixed language project. Clojure main program calls Fr
 
 ## Installation
 
-Download from https://github.com/seancorfield/lein-fregec.
+Download from https://github.com/Frege/frege-lein-plugin.
 
 ## Usage
 
