@@ -5,8 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  ;; need to depend on Frege for runtime:
-                 [org.frege-lang/frege "3.22.524-gcc99d7e"]]
-  :plugins [[lein-fregec "3.22.524"]]
+                 [org.frege-lang/frege "3.23.288-gaa3af0c"]]
+  :plugins [[lein-fregec "3.23.288"]]
   :frege-source-paths ["src/frege"]
   :main example.core
   :profiles {:uberjar {:aot :all
