@@ -6,7 +6,7 @@ A Leiningen plugin to compile Frege (http://www.frege-lang.org) code.
 Usage
 -----
 
-Add `[lein-fregec "3.23.370"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
+Add `[lein-fregec "3.23.401"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
 
 Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way (although the `hello` example relies on current directory).
 
@@ -40,7 +40,7 @@ This tells Leiningen to run the `fregec` task and the `compile` task before buil
 Also, in order to include the Frege runtime in the resulting JAR file, you will need the following dependency in your `project.clj` file:
 
 ```clojure
-:dependencies [[org.frege-lang/frege "3.23.370-g898bc8c]]
+:dependencies [[org.frege-lang/frege "3.23.401-g7c45277]]
 ```
 
 The version here should exactly match that displayed by `lein-fregec` when you use the `DEBUG=true` environment variable!

@@ -4,6 +4,6 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [;; need to depend on Frege for uberjar:
-                 [org.frege-lang/frege "3.23.370-g898bc8c"]]
-  :plugins [[lein-fregec "3.23.370"]]
+                 [org.frege-lang/frege "3.23.401-g7c45277"]]
+  :plugins [[lein-fregec "3.23.401"]]
   :profiles {:uberjar {:prep-tasks ["fregec"]}})
