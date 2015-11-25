@@ -49,13 +49,17 @@
                            (str "-" (subs arg 1))
                            arg)) args))
 
+(def ^:private valid-ops
+  "Valid command line arguments that affect plugin behavior."
+  #{":run" ":test"})
+
 (defn- run-class-args
   "Given command line arguments, extract keyword arg and ClassName.
   Returns a vector of the keyword arg (or nil), the ClassName (or nil), the args
   before the keyword arg, and the args after the ClassName."
   [args]
-  (let [[before & [kw arg & run-args]] (split-with (fn [arg] (not= \: (first arg))) args)]
-    (if (and kw arg (seq run-args))
+  (let [[before & [[kw arg & run-args]]] (split-with (fn [arg] (not (valid-ops arg))) args)]
+    (if (and kw arg)
       [(keyword (subs kw 1)) arg before run-args]
       [nil nil args nil])))
 

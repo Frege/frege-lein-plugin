@@ -6,7 +6,7 @@ A Leiningen plugin to compile Frege (http://www.frege-lang.org) code.
 Usage
 -----
 
-Add `[lein-fregec "3.23.401"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
+Add `[lein-fregec "3.23.401t"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
 
 Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way (although the `hello` example relies on current directory).
 
@@ -62,6 +62,32 @@ You can also run your (pure Frege) code by specifying `:run` and the class name 
 
 ```sh
 lein fregec :run Hello
+```
+
+Arguments to the Frege compiler should come before `:run` (and can use `:` or `-` to introduce them). Arguments to the program being run should come after the class name (and are passed exactly as-is).
+
+If you have tests, you can run those using `:test`:
+
+```sh
+lein fregec :test HelloTest
+```
+
+This is equivalent to:
+
+```sh
+lein fregec :run frege.tools.Quick HelloTest
+```
+
+You can pass flags to QuickCheck like this:
+
+```sh
+lein fregec :test -v HelloTest
+```
+
+which is equivalent to:
+
+```sh
+lein fregec :run frege.tools.Quick -v HelloTest
 ```
 
 There will also be a non-standalone JAR will which does not contain the Frege runtime.

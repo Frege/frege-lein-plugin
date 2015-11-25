@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  ;; need to depend on Frege for runtime:
                  [org.frege-lang/frege "3.23.401-g7c45277"]]
-  :plugins [[lein-fregec "3.23.401"]]
+  :plugins [[lein-fregec "3.23.401t"]]
   :frege-source-paths ["src/frege"]
   :main example.core
   :profiles {:uberjar {:aot :all
