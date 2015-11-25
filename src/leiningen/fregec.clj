@@ -50,13 +50,14 @@
                            arg)) args))
 
 (defn- run-class-args
-  "Given command line arguments, extract :run ClassName.
-  Returns a pair of ClassName (or nil) and the args without :run."
+  "Given command line arguments, extract keyword arg and ClassName.
+  Returns a vector of the keyword arg (or nil), the ClassName (or nil), the args
+  before the keyword arg, and the args after the ClassName."
   [args]
-  (let [[before run-etc] (split-with (partial not= ":run") args)]
-    (if (seq run-etc)
-      [(second run-etc) before (rest (rest run-etc))]
-      [nil args nil])))
+  (let [[before & [kw arg & run-args]] (split-with (fn [arg] (not= \: (first arg))) args)]
+    (if (and kw arg (seq run-args))
+      [(keyword (subs kw 1)) arg before run-args]
+      [nil nil args nil])))
 
 (defn- run-main-form
   "Build a form that can run the main method of the given class."
@@ -78,7 +79,7 @@ Additional options may be passed on the command line.
 To display the Frege compiler's help, use: lein fregec :help"
   [project & args]
   (binding [*out* *err*]
-    (let [[class-name args run-args] (run-class-args args)
+    (let [[op class-name args run-args] (run-class-args args)
           project (merge {:frege-source-paths ["."]} project)
           srcs  (:frege-source-paths project)
           out   (:compile-path project)
@@ -104,4 +105,6 @@ To display the Frege compiler's help, use: lein fregec :help"
                       (subprocess-compiler-form fregec-args)))
       (when class-name
         (eval/eval-in (project/merge-profiles project [subprocess-profile])
-                      (run-main-form class-name (vec run-args)))))))
+                      (case op
+                        :run (run-main-form class-name (vec run-args))
+                        :test (run-main-form "frege.tools.Quick" (into [class-name] run-args))))))))
