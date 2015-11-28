@@ -36,5 +36,5 @@ Or you can simply run it using `lein-fregec` itself immediately after the compil
 
 Copyright (c) 2014-2015 Sean Corfield
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the BSD 3-clause License, the same as Frege itself.
 

@@ -28,5 +28,5 @@ That produces a JAR file which you can run:
 
 Copyright (c) 2014-2015 Sean Corfield
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the BSD 3-clause License, the same as Frege itself.
 

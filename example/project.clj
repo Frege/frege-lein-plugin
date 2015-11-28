@@ -1,8 +1,8 @@
 (defproject example "0.1.0-SNAPSHOT"
   :description "Example Clojure / Frege mixed language application"
   :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :license {:name "BSD 3-clause"
+            :url "http://opensource.org/licenses/BSD-3-Clause"}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  ;; need to depend on Frege for runtime:
                  [org.frege-lang/frege "3.23.422-ga05a487"]]
