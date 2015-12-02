@@ -22,7 +22,7 @@ Run the application:
 
 Note that you can also run the application without creating a JAR file after `lein fregec` if you specify the classpath that includes the Frege runtime:
 
-    java -cp ~/.m2/repository/org/frege-lang/frege/3.23.422-ga05a487/frege-3.23.422-ga05a487.jar:target/classes Hello
+    java -cp ~/.m2/repository/org/frege-lang/frege/3.23.437-g79ae0cb/frege-3.23.437-g79ae0cb.jar:target/classes Hello
 
 A simpler, but slower way to achieve that is to rely on Leiningen to retrieve the necessary classpath:
 
