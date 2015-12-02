@@ -3,12 +3,31 @@ lein-fregec
 
 A Leiningen plugin to compile Frege (http://www.frege-lang.org) code.
 
-Usage
+Usage - Simple
 -----
+
+The easiest way to use Leiningen with Frege (or with Clojure and Frege) is to take advantage of the `frege` template --
+[frege-lein-template](https://github.com/Frege/frege-lein-template) -- to create a new Leiningen project for either a pure Frege project or a mixed Clojure / Frege project (with a Clojure main entry point):
+
+    lein new frege myapp
+
+This will create a folder called `myapp` containing a Leiningen project with an example of a pure Frege program in it. If you want a mixed Clojure / Frege project:
+
+    lein new frege myapp -- :with-clojure
+
+The Frege template will always set up a project with the most recent stable version of Frege. If you want to modify the `project.clj` file, read the section below on what settings are available.
+
+Usage - Manual
+-----
+
+If you already have a Leiningen project, you can add this plugin as follows:
 
 Add `[lein-fregec "3.23.422"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
 
-Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way (although the `hello` example relies on current directory).
+Usage - Configuration & Execution
+-----
+
+Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way (although the `hello` example relies on current directory). The template generates projects that either use `src` (pure Frege) or `src/frege` (mixed Clojure / Frege).
 
 Run `lein fregec` to compile Frege source files to `.class` files.
 
