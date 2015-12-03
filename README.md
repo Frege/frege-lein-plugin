@@ -22,7 +22,7 @@ Usage - Manual
 
 If you already have a Leiningen project, you can add this plugin as follows:
 
-Add `[lein-fregec "3.23.437"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
+Add `[lein-fregec "3.23.442"]` to `:plugins` in your `project.clj`. The version of `lein-fregec` matches the version of the Frege compiler it is compatible with and uses.
 
 Usage - Configuration & Execution
 -----
@@ -59,7 +59,7 @@ This tells Leiningen to run the `fregec` task and the `compile` task before buil
 Also, in order to include the Frege runtime in the resulting JAR file, you will need the following dependency in your `project.clj` file:
 
 ```clojure
-:dependencies [[org.frege-lang/frege "3.23.437-g79ae0cb]]
+:dependencies [[org.frege-lang/frege "3.23.442-SNAPSHOT]]
 ```
 
 The version here should exactly match that displayed by `lein-fregec` when you use the `DEBUG=true` environment variable!
