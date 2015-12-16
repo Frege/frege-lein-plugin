@@ -4,6 +4,6 @@
   :license {:name "BSD 3-clause"
             :url "http://opensource.org/licenses/BSD-3-Clause"}
   :dependencies [;; need to depend on Frege for uberjar:
-                 [org.frege-lang/frege "3.23.442-SNAPSHOT"]]
-  :plugins [[lein-fregec "3.23.442"]]
+                 [org.frege-lang/frege "3.23.450-SNAPSHOT"]]
+  :plugins [[lein-fregec "3.23.450"]]
   :profiles {:uberjar {:prep-tasks ["fregec"]}})
