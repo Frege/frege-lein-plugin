@@ -29,6 +29,20 @@ Usage - Configuration & Execution
 
 Set `:frege-source-paths` to the location(s) of your Frege source files. Default is the current directory but I highly recommend using `src/frege` and structuring your projects that way (although the `hello` example relies on current directory). The template generates projects that either use `src` (pure Frege) or `src/frege` (mixed Clojure / Frege).
 
+If you created `project.clj` manually, rather than via the `frege` template -- or you are upgrading an older `project.clj` file -- then you must tell the Frege compiler to target Java 7 explicitly, either in `project.clj`:
+
+```clojure
+:fregec-options ["-target" "1.7"]
+```
+
+or via the command line (see below for more about Frege compiler options):
+
+```sh
+lein fregec :target 1.7
+```
+
+That is added to `project.clj` automatically by the 3.24-7.100 version of the `frege` template.
+
 Run `lein fregec` to compile Frege source files to `.class` files.
 
 The output of compilation will go to the `:compile-path` directory, which defaults to `target/classes/` in Leiningen.
@@ -118,6 +132,6 @@ An example of mixed Clojure / Frege usage can be found in the [example directory
 License
 -------
 
-Copyright (c) 2014-2015 Sean Corfield
+Copyright (c) 2014-2016 Sean Corfield
 
 Distributed under the BSD License, the same as Frege.
