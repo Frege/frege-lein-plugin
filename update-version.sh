@@ -26,8 +26,8 @@ then
     exit 1
 fi
 new_version="$1"
-new_major=`echo $new_version | sed 's;-.*;;'`
-new_minor=`echo $new_version | sed 's;.*-;;'`
+new_major=$new_version
+new_minor=ignored
 if test "x$new_major" != "x" -a "x$new_minor" != "x" -a "x$new_major" != "x$new_minor"
 then
     echo "Will update to ${new_major}-${new_minor} version."
